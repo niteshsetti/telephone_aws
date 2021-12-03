@@ -1,0 +1,129 @@
+<html>
+
+<head>
+    <title>New App</title>
+    <link rel="stylesheet" href="style.css">
+   <script src="https://rawgit.com/aws/amazon-cognito-identity-js/master/dist/aws-cognito-sdk.min.js"></script>
+   <script src="https://rawgit.com/aws/amazon-cognito-identity-js/master/dist/amazon-cognito-identity.min.js"></script>
+   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.6.10.js"></script>
+   <script src="scripts.js"></script>
+   <script src="Script.js"></script>
+</head>
+
+<body>
+    <div name="aaa"></div>
+    <div class="flip-container">
+       
+        <div class="flipper" id="flipper">
+            <div class="front">
+                <h1 class="title">Register</h1>
+                <form>
+                    <input type="text" id="a" pattern=".*" placeholder="Enter Your name" required />
+                    <input type="email" id="b" pattern=".*" placeholder="Enter Your Email" required />
+                    <input type="password" id="c" pattern=".*" placeholder="Enter your Password" required />
+                    <input type="password" id="d" pattern=".*" placeholder="Enter Confirm Password" required>
+                    <input type="button" onclick="bs()" value="Signup">
+                </form>
+                <a class="flipbutton" onclick="newa()" id="loginButton" href="#">Login to my account →</a>
+            </div>
+
+            <div class="back">
+                <h1 class="title">Login</h1>
+                <form>
+                   <input type="email" id="e" pattern=".*" placeholder="Enter Your Email" required/>
+                   <input type="password" id="f" pattern=".*" placeholder="Enter Your password" required/>
+                   <input type="button" onclick="bs1()" value="Signin">
+                </form>
+                <a class="flipbutton" onclick="newa()" id="registerButton" href="#">Create my account →</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    function newa() {
+        document.querySelector("#flipper").classList.toggle("flip");
+    };
+ </script>
+ <script>
+            var username;
+            var password;
+            var personalname;
+            var pooldata;
+            function bs(){
+                personalname=document.getElementById('a').value;
+                username=document.getElementById('b').value;
+                if(document.getElementById('c').value!=document.getElementById('d').value){
+                    alert("Passwords dont match");
+                }
+                else{
+                    password=document.getElementById('c').value;
+                }
+                pooldata={
+                    UserPoolId:_config.cognito.userPoolId,
+                    ClientId:_config.cognito.clientId
+
+                };
+                var userpool=new AmazonCognitoIdentity.CognitoUserPool(pooldata);
+                var al=[]
+                var de={
+                    Name:"email",
+                    Value:username,
+                };
+                var dn={
+                    Name:"name",
+                    Value:personalname,
+                };
+                var ae=new AmazonCognitoIdentity.CognitoUserAttribute(de);
+                var an=new AmazonCognitoIdentity.CognitoUserAttribute(dn);
+                al.push(ae)
+                al.push(an)
+                userpool.signUp(username,password,al,null,function(err,result){
+                    if(err){
+                        alert(alert.message|| JSON.stringify(err));
+                    }
+                    cognitoUser=result.user;
+                    console.log('user name is '+cognitoUser.getUsername());
+                    document.getElementById('th').innerHTML="check your email for a verification"
+                })
+            } 
+            </script>
+            <script>
+            function bs1(){
+                var authenticationData={
+                    Username:document.getElementById('e').value,
+                    Password:document.getElementById('f').value
+                };
+                console.log(authenticationData.Username);
+                console.log(authenticationData.Password);
+                var authenticationDetails=new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+                console.log(authenticationDetails);
+                var poolData={
+                    UserPoolId:_config.cognito.userPoolId,
+                    ClientId:_config.cognito.clientId,
+                };
+                console.log(poolData.UserPoolId);
+                console.log(poolData.ClientId);
+                var userPool=new AmazonCognitoIdentity.CognitoUserPool(poolData);
+                console.log(userPool);
+                var userData={
+                    Username:document.getElementById('e').value,
+                    Pool:userPool,
+                };
+                console.log(userData.Username);
+                console.log(userData.Pool);
+                var cognitoUser=new AmazonCognitoIdentity.CognitoUser(userData)
+                console.log(cognitoUser);
+                cognitoUser.authenticateUser(authenticationDetails,{
+                    onSuccess:function(result){
+                        var accessToken=result.getAccessToken().getJwtToken();
+                        window.location.href="http://localhost/training/angularjs/angularjs1/index.php";
+                        console.log(accessToken);
+                    },
+                    onFailure:function(err){
+                        alert(err.message || JSON.stringify(err));
+                    },
+                });
+            }
+   </script>
+</body>
+
+</html>
