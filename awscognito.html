@@ -44,20 +44,25 @@
     };
  </script>
  <script>
-            var username;
-            var password;
-            var personalname;
-            var pooldata;
             function bs(){
+                var username;
+                var password;
+                var personalname;
+                var pooldata;
+                var confirmpassword;
                 personalname=document.getElementById('a').value;
                 username=document.getElementById('b').value;
-                if(document.getElementById('c').value!=document.getElementById('d').value){
+                password=document.getElementById('c').value;
+                confirmpassword=document.getElementById('d').value;
+                if(personalname=="" || username=="" || password=="" || confirmpassword==""){
+                    alert("Complete All Fields");
+                }
+                else if(password!=confirmpassword){
                     alert("Passwords dont match");
                 }
                 else{
                     password=document.getElementById('c').value;
-                }
-                pooldata={
+                   pooldata={
                     UserPoolId:_config.cognito.userPoolId,
                     ClientId:_config.cognito.clientId
 
@@ -78,12 +83,24 @@
                 al.push(an)
                 userpool.signUp(username,password,al,null,function(err,result){
                     if(err){
-                        alert(alert.message|| JSON.stringify(err));
+                        //alert(alert.message);
+                        var t=JSON.stringify(err.message)
+                       alert(t);
                     }
                     cognitoUser=result.user;
                     console.log('user name is '+cognitoUser.getUsername());
                     alert("Check Your Email for Verification.");
+                    var ts='Check Your Email for Verification.';
+                    if(ts){
+                        document.getElementById("a").value="";
+                        document.getElementById("b").value="";
+                        document.getElementById("c").value="";
+                        document.getElementById("d").value="";
+                        newa();
+                    }
                 })
+
+              }
             } 
             </script>
             <script>
