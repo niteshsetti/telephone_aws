@@ -15,7 +15,7 @@
 		
 		<div class="container" ng-init="fetchData()">
 			<br />
-				<h3 align="center">AngularJS using Bootstrap Modal</h3>
+				<h3 align="center">Telephone-Directory</h3>
 			<br />
 			<div class="alert alert-success alert-dismissible" ng-show="success" >
 				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -55,7 +55,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="crudmodal">
 	<div class="modal-dialog" role="document">
     	<div class="modal-content">
-    		<form method="post" ng-submit="submitForm()">
+    		<form method="post" ng-submit="submitForm()" id="poki" autocomplete="off">
 	      		<div class="modal-header">
 	        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	        		<h4 class="modal-title">{{modalTitle}}</h4>
@@ -67,7 +67,7 @@
 					</div>
 					<div class="form-group">
 						<label>Enter  Contact-ID</label>
-						<input type="text" name="cid" ng-model="cid" id="cid" class="form-control"/>
+						<input type="text" name="cid" ng-model="cid" id="cid" class="form-control" ng-disabled="verify"/>
 					</div>
 					<div class="form-group">
 						<label>Enter  Name</label>
@@ -118,7 +118,20 @@
 						"phnumber":phnumber
 					},
 					success:function(data){
-						alert(data);
+						if(data==="Contact Saved Successfully"){
+						$('#poki').hide();
+						setTimeout(() => {
+							window.location.href="http://localhost/training/angularjs/angularjs1/index.php";		
+						},1000);
+					  }
+					  else if(data==="Contact ID Exists"){
+						  alert("Contact ID Exists");
+						  
+					  }
+					  else{
+						  alert("Number Already Exists !!!");
+					  }
+						
 					}
 				});
 			}
@@ -152,12 +165,12 @@ app.controller('crudController', function($scope, $http,$timeout){
 		$scope.submit_button = 'Insert';
 		$scope.openModal();
 	};
-	$http.get("http://localhost/training/angularjs/angularjs1/fetchrecords.php").then(function(response){
+	$http.get("http://localhost/training/angularjs/angularjs1/fetchdupe.php").then(function(response){
 		$scope.namesData=response.data
 		console.log($scope.namesData)
 	});
 	$scope.deleteData=function(x){
-		$http.get("http://localhost/training/angularjs/angularjs1/fetchrecords.php").then(function(responses){
+		$http.get("http://localhost/training/angularjs/angularjs1/fetchdupe.php").then(function(responses){
 		$scope.deleteid=responses.data[x].Id;
 		$http.post("http://localhost/training/angularjs/angularjs1/deleterecords.php",
                 {
@@ -177,22 +190,30 @@ app.controller('crudController', function($scope, $http,$timeout){
 		$scope.modalTitle = 'Add Data';
 		$scope.submit_button = 'Insert';
 		$scope.openModal();
-		$http.get("http://localhost/training/angularjs/angularjs1/fetchrecords.php").then(function(responses){
+		$http.get("http://localhost/training/angularjs/angularjs1/fetchdupe.php").then(function(responses){
 		$scope.cid=responses.data[y].Id;
 		$scope.name=responses.data[y].username;
 		$scope.phnumber=responses.data[y].usernumber;
+		$scope.verify=true;
 		$("#submits").click(function(){
-		  $http.post("http://localhost/training/angularjs/angularjs1/updaterecords.php",
-                {
-                    'Id':$scope.cid,
-					'username':$scope.name,
-					'usernumber':$scope.phnumber
-                },config
-                ).then(function(response){
-                    console.log(response.data)
-        });
-	});
+			if($scope.cid!="" || $scope.name!="" || $scope.phnumber!=""){
+					$http.post("http://localhost/training/angularjs/angularjs1/updaterecords.php",
+							{
+								'Id':$scope.cid,
+								'username':$scope.name,
+								'usernumber':$scope.phnumber
+							},config
+							).then(function(response){
+							if(response.data=="Updated item"){
+								$timeout(function(){
+									window.location.href="http://localhost/training/angularjs/angularjs1/index.php";
+								},1000);
+							}
+					});
+			}
+
 	    });
+	  });
 
 	}
 

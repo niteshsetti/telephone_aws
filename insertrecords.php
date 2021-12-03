@@ -48,7 +48,6 @@ $sdk = new Aws\Sdk([
             }
         }
         if($count==0 && $count1==0){
-            $p="Elloe";
             $result = $dynamodb->putItem($params);
             if($result){
                 echo "Contact Saved Successfully";

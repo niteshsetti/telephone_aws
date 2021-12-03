@@ -24,7 +24,7 @@
                     <input type="password" id="d" pattern=".*" placeholder="Enter Confirm Password" required>
                     <input type="button" onclick="bs()" value="Signup">
                 </form>
-                <a class="flipbutton" onclick="newa()" id="loginButton" href="#">Login to my account →</a>
+                <a class="flipbutton" onclick="newa()" id="loginButton" href="#">Login to my account &rarr;</a>
             </div>
 
             <div class="back">
@@ -34,7 +34,7 @@
                    <input type="password" id="f" pattern=".*" placeholder="Enter Your password" required/>
                    <input type="button" onclick="bs1()" value="Signin">
                 </form>
-                <a class="flipbutton" onclick="newa()" id="registerButton" href="#">Create my account →</a>
+                <a class="flipbutton" onclick="newa()" id="registerButton" href="#">Create my account &rarr;</a>
             </div>
         </div>
     </div>
@@ -82,7 +82,7 @@
                     }
                     cognitoUser=result.user;
                     console.log('user name is '+cognitoUser.getUsername());
-                    document.getElementById('th').innerHTML="check your email for a verification"
+                    alert("Check Your Email for Verification.");
                 })
             } 
             </script>

@@ -56,10 +56,10 @@ $sdk = new Aws\Sdk([
         }
         if($count==0){
         $result = $dynamodb->updateItem($params);
-        echo "Updated item.\n";
+        echo "Updated item";
         }
         else{
-            echo "Number Already Exists !!! ";
+            echo "Number Already Exists";
         }
     
     } catch (DynamoDbException $e) {

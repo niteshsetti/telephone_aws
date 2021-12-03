@@ -32,6 +32,7 @@ foreach ($result['Items'] as $i) {
 $empty=array();
 $snos=array();
 $p=json_encode($results);
+echo $p;
 $check=json_decode(json_encode($results),true);
 foreach ($check as $key => $value) {
     array_push($empty,$value["usernumber"]);
